@@ -9,6 +9,7 @@ struct ProfileView: View {
     @Environment(ThemePreferences.self) private var theme
 
     @State private var showAddGroupSheet = false
+    @State private var selectedMemberForDetail: GroupMember?
 
     // Roster-ul rămâne scopat la grupul ACTIV — reprezintă "membrii acestui grup",
     // spre deosebire de dataStore.members, care combină toate grupurile vizibile pe hartă.
@@ -57,7 +58,11 @@ struct ProfileView: View {
 
                 Section {
                     ForEach(activeGroupMembers) { member in
-                        MemberListRow(member: member, isCurrentUser: member.id == auth.currentUserId)
+                        MemberListRow(
+                            member: member,
+                            isCurrentUser: member.id == auth.currentUserId,
+                            onTap: { selectedMemberForDetail = member }
+                        )
                     }
                 } header: {
                     Text("Membrii (\(activeGroupMembers.count))")
@@ -96,6 +101,9 @@ struct ProfileView: View {
             .navigationTitle("Profil")
             .sheet(isPresented: $showAddGroupSheet) {
                 GroupOnboardingView(isPresentedAsSheet: true)
+            }
+            .sheet(item: $selectedMemberForDetail) { member in
+                MemberDetailSheet(member: member)
             }
         }
     }
@@ -206,6 +214,7 @@ struct MyGroupRow: View {
 struct MemberListRow: View {
     let member: GroupMember
     let isCurrentUser: Bool
+    var onTap: () -> Void = {}
 
     @Environment(GroupService.self)   private var groupService
     @Environment(GroupDataStore.self) private var dataStore
@@ -276,6 +285,8 @@ struct MemberListRow: View {
                 .padding(.leading, 4)
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
         .confirmationDialog(
             "Faci pe \(member.name) admin?",
             isPresented: $showTransferConfirm,

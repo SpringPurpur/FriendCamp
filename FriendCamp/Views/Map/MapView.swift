@@ -44,6 +44,7 @@ struct MapView: View {
     @Environment(AuthService.self)    private var auth
     @Environment(UserPreferencesService.self) private var prefs
     @Environment(MapVisibilityPreferences.self) private var mapVisibility
+    @Environment(TabRouter.self) private var tabRouter
 
     @State private var vm = MapViewModel()
     @State private var locationService = LocationService()
@@ -120,6 +121,11 @@ struct MapView: View {
                 }
                 .onChange(of: locationService.userLocation) { _, _ in
                     Task { await uploadHeartbeat() }
+                }
+                .onChange(of: tabRouter.pendingMapCenter) { _, newValue in
+                    guard let newValue else { return }
+                    centerRequest = newValue
+                    tabRouter.pendingMapCenter = nil
                 }
 
                 if tileSource == .openStreetMap {
@@ -493,7 +499,11 @@ struct MemberChip: View {
 struct MemberDetailSheet: View {
     let member: GroupMember
     @Environment(\.dismiss) private var dismiss
-    @Environment(GroupService.self) private var groupService
+    @Environment(GroupService.self)   private var groupService
+    @Environment(GroupDataStore.self) private var dataStore
+    @Environment(TabRouter.self)      private var tabRouter
+
+    @State private var selectedPOI: PointOfInterest?
 
     private var isMultiGroup: Bool { groupService.myGroups.count > 1 }
     private var ringColor: Color { isMultiGroup ? member.groupId.groupAccentColor : .white }
@@ -502,56 +512,120 @@ struct MemberDetailSheet: View {
         return groupService.myGroups.first { $0.groupId == member.groupId }?.group.name
     }
 
+    // POI-urile sunt multi-grup pe hartă, deci filtrarea e mereu validă indiferent de grupul
+    // membrului. Postările/cheltuielile rămân scopate la grupul ACTIV — dacă membrul e din alt
+    // grup, acele liste nici nu conțin datele lui, deci un "0" ar fi înșelător; le ascundem.
+    private var memberPOIs: [PointOfInterest] {
+        dataStore.pois.filter { $0.createdById == member.id }
+    }
+    private var isInActiveGroup: Bool { member.groupId == groupService.activeGroupId }
+    private var memberPostsCount: Int {
+        dataStore.posts.filter { $0.author.id == member.id }.count
+    }
+    private var memberExpensesCount: Int {
+        dataStore.expenses.filter { $0.paidBy.id == member.id }.count
+    }
+
     var body: some View {
         NavigationStack {
-            VStack(spacing: 28) {
-                Circle()
-                    .fill(member.avatarColor.gradient)
-                    .frame(width: 88, height: 88)
-                    .overlay(Circle().stroke(ringColor, lineWidth: 3))
-                    .shadow(radius: 8)
-                    .overlay {
-                        Text(member.initials)
-                            .font(.system(size: 36, weight: .bold))
-                            .foregroundStyle(.white)
-                    }
+            List {
+                Section {
+                    VStack(spacing: 12) {
+                        Circle()
+                            .fill(member.avatarColor.gradient)
+                            .frame(width: 88, height: 88)
+                            .overlay(Circle().stroke(ringColor, lineWidth: 3))
+                            .shadow(radius: 8)
+                            .overlay {
+                                Text(member.initials)
+                                    .font(.system(size: 36, weight: .bold))
+                                    .foregroundStyle(.white)
+                            }
 
-                VStack(spacing: 4) {
-                    HStack(spacing: 6) {
-                        Text(member.name)
-                            .font(.title.bold())
-                        if member.isAdmin {
-                            Image(systemName: "crown.fill")
-                                .font(.title3)
-                                .foregroundStyle(.yellow)
+                        VStack(spacing: 4) {
+                            HStack(spacing: 6) {
+                                Text(member.name)
+                                    .font(.title.bold())
+                                if member.isAdmin {
+                                    Image(systemName: "crown.fill")
+                                        .font(.title3)
+                                        .foregroundStyle(.yellow)
+                                }
+                            }
+                            if let groupName {
+                                Text(groupName)
+                                    .font(.caption.bold())
+                                    .foregroundStyle(ringColor)
+                            }
+                        }
+
+                        HStack(spacing: 32) {
+                            DetailStat(
+                                icon: "circle.fill",
+                                iconColor: member.isOnline ? .green : .gray,
+                                label: member.isOnline ? "Online" : "Offline",
+                                value: member.isOnline ? "Live" : timeAgo(member.lastSeen)
+                            )
+                            DetailStat(
+                                icon: member.batteryIcon,
+                                iconColor: member.battery > 20 ? .green : .red,
+                                label: "Baterie",
+                                value: "\(member.battery)%"
+                            )
                         }
                     }
-                    if let groupName {
-                        Text(groupName)
-                            .font(.caption.bold())
-                            .foregroundStyle(ringColor)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+
+                Section {
+                    Button {
+                        tabRouter.goToMap(centeredOn: member.coordinate)
+                        dismiss()
+                    } label: {
+                        Label("Vezi pe hartă", systemImage: "location.fill")
                     }
                 }
 
-                HStack(spacing: 32) {
-                    DetailStat(
-                        icon: "circle.fill",
-                        iconColor: member.isOnline ? .green : .gray,
-                        label: member.isOnline ? "Online" : "Offline",
-                        value: member.isOnline ? "Live" : timeAgo(member.lastSeen)
-                    )
-                    DetailStat(
-                        icon: member.batteryIcon,
-                        iconColor: member.battery > 20 ? .green : .red,
-                        label: "Baterie",
-                        value: "\(member.battery)%"
-                    )
+                Section {
+                    StatRow(icon: "mappin.circle.fill", color: .orange,
+                            label: "Puncte marcate", value: "\(memberPOIs.count)")
+                    if isInActiveGroup {
+                        StatRow(icon: "doc.text.fill", color: .blue,
+                                label: "Postări blog", value: "\(memberPostsCount)")
+                        StatRow(icon: "creditcard.fill", color: .purple,
+                                label: "Cheltuieli plătite", value: "\(memberExpensesCount)")
+                    }
+                } header: {
+                    Text("Statistici")
                 }
 
-                Spacer()
+                if !memberPOIs.isEmpty {
+                    Section {
+                        ForEach(memberPOIs) { poi in
+                            Button {
+                                selectedPOI = poi
+                            } label: {
+                                HStack(spacing: 10) {
+                                    Image(systemName: PointOfInterest.pinIcon)
+                                        .foregroundStyle(poi.displayColor)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(poi.title)
+                                            .foregroundStyle(.primary)
+                                        Text(poi.category)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                    } header: {
+                        Text("Puncte de interes plasate (\(memberPOIs.count))")
+                    }
+                }
             }
-            .padding(.top, 32)
-            .padding(.horizontal)
             .navigationTitle("")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -559,7 +633,10 @@ struct MemberDetailSheet: View {
                 }
             }
         }
-        .presentationDetents([.medium])
+        .sheet(item: $selectedPOI) { poi in
+            POIDetailSheet(poi: poi)
+        }
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
     }
 

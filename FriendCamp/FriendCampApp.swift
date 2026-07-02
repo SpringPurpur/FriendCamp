@@ -8,6 +8,7 @@ struct FriendCampApp: App {
     @State private var prefs         = UserPreferencesService()
     @State private var mapVisibility = MapVisibilityPreferences()
     @State private var theme         = ThemePreferences()
+    @State private var tabRouter     = TabRouter()
 
     // Grupurile ale căror membri/POI-uri se încarcă — vizibile pe hartă, plus grupul activ
     // e mereu inclus implicit prin faptul că orice grup nou devine activ și vizibil.
@@ -39,6 +40,7 @@ struct FriendCampApp: App {
             .environment(prefs)
             .environment(mapVisibility)
             .environment(theme)
+            .environment(tabRouter)
             // Aplicat la nivelul cel mai exterior — inclusiv AuthView/GroupOnboardingView,
             // nu doar ContentView, ca tema să se vadă și înainte de autentificare.
             .preferredColorScheme(theme.appearanceMode.colorScheme)
