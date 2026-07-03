@@ -13,5 +13,14 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+	<dict>
+		<key>PreciseLocationForGroupMap</key>
+		<string>FriendCamp are nevoie de locația precisă ca să te arate corect pe harta grupului, nu doar aproximativ.</string>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 </dict>
 </plist>

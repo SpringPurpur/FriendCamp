@@ -17,6 +17,9 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     // Observabil din MapView pentru a declanșa centrarea camerei la primul fix
     var hasLocation: Bool { userLocation != nil }
 
+    private var hasRequestedAlwaysUpgrade = false
+    private var hasRequestedFullAccuracy = false
+
     override init() {
         super.init()
         manager.delegate = self
@@ -33,7 +36,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
-            manager.startUpdatingLocation()
+            configureForCurrentAuthorization()
         default:
             break
         }
@@ -44,13 +47,40 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         _ = userLocation
     }
 
+    // Pornește actualizările și configurează tracking-ul de fundal/acuratețea completă
+    // pentru orice nivel curent de autorizare — apelată atât după cererea inițială cât și
+    // la fiecare schimbare de autorizare (upgrade la Always, schimbare de acuratețe etc.)
+    private func configureForCurrentAuthorization() {
+        guard authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways else { return }
+        manager.startUpdatingLocation()
+
+        if authorizationStatus == .authorizedAlways {
+            manager.allowsBackgroundLocationUpdates = true
+            manager.showsBackgroundLocationIndicator = true
+            // Prioritizăm continuitatea (grup de camping, poți sta pe loc ore în șir la
+            // tabără) peste economia de baterie a pauzării automate.
+            manager.pausesLocationUpdatesAutomatically = false
+        }
+
+        if manager.accuracyAuthorization == .reducedAccuracy, !hasRequestedFullAccuracy {
+            hasRequestedFullAccuracy = true
+            manager.requestTemporaryFullAccuracyAuthorization(withPurposeKey: "PreciseLocationForGroupMap")
+        }
+
+        // Upgrade la Always doar din When In Use — requestAlwaysAuthorization() apelat direct
+        // din .notDetermined echivalează cu when-in-use (comportament documentat Apple), de-aia
+        // fluxul rămâne în 2 pași: when-in-use la prima cerere, apoi upgrade aici.
+        if authorizationStatus == .authorizedWhenInUse, !hasRequestedAlwaysUpgrade {
+            hasRequestedAlwaysUpgrade = true
+            manager.requestAlwaysAuthorization()
+        }
+    }
+
     // MARK: - CLLocationManagerDelegate
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
-        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
-            manager.startUpdatingLocation()
-        }
+        configureForCurrentAuthorization()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
