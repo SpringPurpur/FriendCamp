@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A185E7FF2FF7CC12005A2A8B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A185E7FE2FF7CC12005A2A8B /* WidgetKit.framework */; };
+		A185E8012FF7CC12005A2A8B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A185E8002FF7CC12005A2A8B /* SwiftUI.framework */; };
+		A185E8102FF7CC14005A2A8B /* FriendCampWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A185E7FC2FF7CC12005A2A8B /* FriendCampWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A1CD8AF42FF506EB003E8E68 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = A1CD8AF32FF506EB003E8E68 /* PostgREST */; };
 		A1CD8AF62FF506EB003E8E68 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = A1CD8AF52FF506EB003E8E68 /* Supabase */; };
 		A1D7B7262FF6914800DCE07D /* MapCache in Frameworks */ = {isa = PBXBuildFile; productRef = 1BB613AFBFD00791CBF840CB /* MapCache */; };
@@ -28,15 +31,47 @@
 			remoteGlobalIDString = A15B0FFA2FE7FDD200009EA2;
 			remoteInfo = FriendCamp;
 		};
+		A185E80E2FF7CC14005A2A8B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A15B0FF32FE7FDD200009EA2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A185E7FB2FF7CC12005A2A8B;
+			remoteInfo = FriendCampWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A185E8112FF7CC14005A2A8B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A185E8102FF7CC14005A2A8B /* FriendCampWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A15B0FFB2FE7FDD200009EA2 /* FriendCamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendCamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A15B100A2FE7FDD400009EA2 /* FriendCampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FriendCampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A15B10142FE7FDD400009EA2 /* FriendCampUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FriendCampUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A185E7FC2FF7CC12005A2A8B /* FriendCampWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FriendCampWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A185E7FE2FF7CC12005A2A8B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		A185E8002FF7CC12005A2A8B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		A185E8162FF7CCB9005A2A8B /* FriendCampWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FriendCampWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A185E8152FF7CC14005A2A8B /* Exceptions for "FriendCampWidget" folder in "FriendCampWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A185E7FB2FF7CC12005A2A8B /* FriendCampWidgetExtension */;
+		};
 		A1CD8AF72FF50775003E8E68 /* Exceptions for "FriendCamp" folder in "FriendCamp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -64,6 +99,14 @@
 		A15B10172FE7FDD400009EA2 /* FriendCampUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FriendCampUITests;
+			sourceTree = "<group>";
+		};
+		A185E8022FF7CC12005A2A8B /* FriendCampWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A185E8152FF7CC14005A2A8B /* Exceptions for "FriendCampWidget" folder in "FriendCampWidgetExtension" target */,
+			);
+			path = FriendCampWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -94,15 +137,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A185E7F92FF7CC12005A2A8B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A185E8012FF7CC12005A2A8B /* SwiftUI.framework in Frameworks */,
+				A185E7FF2FF7CC12005A2A8B /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		A15B0FF22FE7FDD200009EA2 = {
 			isa = PBXGroup;
 			children = (
+				A185E8162FF7CCB9005A2A8B /* FriendCampWidgetExtension.entitlements */,
 				A15B0FFD2FE7FDD200009EA2 /* FriendCamp */,
 				A15B100D2FE7FDD400009EA2 /* FriendCampTests */,
 				A15B10172FE7FDD400009EA2 /* FriendCampUITests */,
+				A185E8022FF7CC12005A2A8B /* FriendCampWidget */,
+				A185E7FD2FF7CC12005A2A8B /* Frameworks */,
 				A15B0FFC2FE7FDD200009EA2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,8 +168,18 @@
 				A15B0FFB2FE7FDD200009EA2 /* FriendCamp.app */,
 				A15B100A2FE7FDD400009EA2 /* FriendCampTests.xctest */,
 				A15B10142FE7FDD400009EA2 /* FriendCampUITests.xctest */,
+				A185E7FC2FF7CC12005A2A8B /* FriendCampWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A185E7FD2FF7CC12005A2A8B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A185E7FE2FF7CC12005A2A8B /* WidgetKit.framework */,
+				A185E8002FF7CC12005A2A8B /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,10 +192,12 @@
 				A15B0FF72FE7FDD200009EA2 /* Sources */,
 				A15B0FF82FE7FDD200009EA2 /* Frameworks */,
 				A15B0FF92FE7FDD200009EA2 /* Resources */,
+				A185E8112FF7CC14005A2A8B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A185E80F2FF7CC14005A2A8B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				A15B0FFD2FE7FDD200009EA2 /* FriendCamp */,
@@ -192,6 +259,28 @@
 			productReference = A15B10142FE7FDD400009EA2 /* FriendCampUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		A185E7FB2FF7CC12005A2A8B /* FriendCampWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A185E8142FF7CC14005A2A8B /* Build configuration list for PBXNativeTarget "FriendCampWidgetExtension" */;
+			buildPhases = (
+				A185E7F82FF7CC12005A2A8B /* Sources */,
+				A185E7F92FF7CC12005A2A8B /* Frameworks */,
+				A185E7FA2FF7CC12005A2A8B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A185E8022FF7CC12005A2A8B /* FriendCampWidget */,
+			);
+			name = FriendCampWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = FriendCampWidgetExtension;
+			productReference = A185E7FC2FF7CC12005A2A8B /* FriendCampWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -212,6 +301,9 @@
 					A15B10132FE7FDD400009EA2 = {
 						CreatedOnToolsVersion = 26.5;
 						TestTargetID = A15B0FFA2FE7FDD200009EA2;
+					};
+					A185E7FB2FF7CC12005A2A8B = {
+						CreatedOnToolsVersion = 26.5;
 					};
 				};
 			};
@@ -237,6 +329,7 @@
 				A15B0FFA2FE7FDD200009EA2 /* FriendCamp */,
 				A15B10092FE7FDD400009EA2 /* FriendCampTests */,
 				A15B10132FE7FDD400009EA2 /* FriendCampUITests */,
+				A185E7FB2FF7CC12005A2A8B /* FriendCampWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -257,6 +350,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A15B10122FE7FDD400009EA2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A185E7FA2FF7CC12005A2A8B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -287,6 +387,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A185E7F82FF7CC12005A2A8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -299,6 +406,11 @@
 			isa = PBXTargetDependency;
 			target = A15B0FFA2FE7FDD200009EA2 /* FriendCamp */;
 			targetProxy = A15B10152FE7FDD400009EA2 /* PBXContainerItemProxy */;
+		};
+		A185E80F2FF7CC14005A2A8B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A185E7FB2FF7CC12005A2A8B /* FriendCampWidgetExtension */;
+			targetProxy = A185E80E2FF7CC14005A2A8B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -429,6 +541,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FriendCamp/FriendCamp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V392JFZ4Q6;
@@ -436,8 +549,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FriendCamp/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FriendCamp folosește camera pentru a face poze la puncte de interes și postări de blog.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "FriendCamp folosește locația pentru a-ți arăta poziția pe hartă grupului.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "FriendCamp îți distribuie locația către grup, inclusiv când aplicația nu e deschisă, cât timp ai activată distribuirea locației în Confidențialitate.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "FriendCamp folosește locația pentru a-ți arăta poziția pe hartă grupului.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -466,6 +579,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FriendCamp/FriendCamp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = V392JFZ4Q6;
@@ -473,8 +587,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = FriendCamp/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "FriendCamp folosește camera pentru a face poze la puncte de interes și postări de blog.";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "FriendCamp folosește locația pentru a-ți arăta poziția pe hartă grupului.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "FriendCamp îți distribuie locația către grup, inclusiv când aplicația nu e deschisă, cât timp ai activată distribuirea locației în Confidențialitate.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "FriendCamp folosește locația pentru a-ți arăta poziția pe hartă grupului.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -582,6 +696,70 @@
 			};
 			name = Release;
 		};
+		A185E8122FF7CC14005A2A8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FriendCampWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V392JFZ4Q6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FriendCampWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FriendCampWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fancywrappers.FriendCamp.FriendCampWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A185E8132FF7CC14005A2A8B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = FriendCampWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = V392JFZ4Q6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FriendCampWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = FriendCampWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fancywrappers.FriendCamp.FriendCampWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -617,6 +795,15 @@
 			buildConfigurations = (
 				A15B10252FE7FDD400009EA2 /* Debug */,
 				A15B10262FE7FDD400009EA2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A185E8142FF7CC14005A2A8B /* Build configuration list for PBXNativeTarget "FriendCampWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A185E8122FF7CC14005A2A8B /* Debug */,
+				A185E8132FF7CC14005A2A8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

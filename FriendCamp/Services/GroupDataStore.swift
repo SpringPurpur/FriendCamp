@@ -3,6 +3,7 @@ import MapKit
 import SwiftUI
 import Supabase
 import Observation
+import WidgetKit
 
 @Observable
 final class GroupDataStore {
@@ -38,12 +39,33 @@ final class GroupDataStore {
             group.addTask { await self.loadPosts(groupId: groupId) }
             group.addTask { await self.loadExpenses(groupId: groupId) }
         }
+        await MainActor.run { updateWidgetSnapshot() }
+    }
+
+    // Scrie un mic "snapshot" în UserDefaults partajat (App Group) pentru widget-ul de Home
+    // Screen, care rulează într-un proces separat și nu are acces direct la starea asta.
+    private func updateWidgetSnapshot() {
+        let latestPost = posts.max(by: { $0.date < $1.date })
+        let snapshot = WidgetSnapshot(
+            onlineCount: members.filter(\.isOnline).count,
+            totalCount: members.count,
+            lastActivityDate: members.map(\.lastSeen).max(),
+            latestPostTitle: latestPost?.title,
+            latestPostAuthor: latestPost?.author.name,
+            latestPostDate: latestPost?.date,
+            generatedAt: Date()
+        )
+        snapshot.save()
+        WidgetCenter.shared.reloadTimelines(ofKind: "FriendCampWidget")
     }
 
     // MARK: - Members (group_member_status view)
 
     func loadMembers(groupIds: [UUID]) async {
-        guard !groupIds.isEmpty else { await MainActor.run { members = [] }; return }
+        guard !groupIds.isEmpty else {
+            await MainActor.run { members = []; updateWidgetSnapshot() }
+            return
+        }
         do {
             let rows: [MemberStatusRow] = try await supabase
                 .from("group_member_status")
@@ -52,7 +74,10 @@ final class GroupDataStore {
                 .execute()
                 .value
             let mapped = rows.map { GroupMember(from: $0) }
-            await MainActor.run { members = mapped }
+            await MainActor.run {
+                members = mapped
+                updateWidgetSnapshot()
+            }
         } catch { }
     }
 

@@ -1,10 +1,3 @@
-//
-//  FriendCampWidgetBundle.swift
-//  FriendCampWidget
-//
-//  Created by Vaceff Vlad on 03/07/2026.
-//
-
 import WidgetKit
 import SwiftUI
 
@@ -12,7 +5,5 @@ import SwiftUI
 struct FriendCampWidgetBundle: WidgetBundle {
     var body: some Widget {
         FriendCampWidget()
-        FriendCampWidgetControl()
-        FriendCampWidgetLiveActivity()
     }
 }
