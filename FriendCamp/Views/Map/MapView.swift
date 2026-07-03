@@ -504,6 +504,7 @@ struct MemberDetailSheet: View {
     @Environment(TabRouter.self)      private var tabRouter
 
     @State private var selectedPOI: PointOfInterest?
+    @State private var selectedPost: BlogPost?
 
     private var isMultiGroup: Bool { groupService.myGroups.count > 1 }
     private var ringColor: Color { isMultiGroup ? member.groupId.groupAccentColor : .white }
@@ -519,8 +520,8 @@ struct MemberDetailSheet: View {
         dataStore.pois.filter { $0.createdById == member.id }
     }
     private var isInActiveGroup: Bool { member.groupId == groupService.activeGroupId }
-    private var memberPostsCount: Int {
-        dataStore.posts.filter { $0.author.id == member.id }.count
+    private var memberPosts: [BlogPost] {
+        dataStore.posts.filter { $0.author.id == member.id }
     }
     private var memberExpensesCount: Int {
         dataStore.expenses.filter { $0.paidBy.id == member.id }.count
@@ -594,7 +595,7 @@ struct MemberDetailSheet: View {
                             label: "Puncte marcate", value: "\(memberPOIs.count)")
                     if isInActiveGroup {
                         StatRow(icon: "doc.text.fill", color: .blue,
-                                label: "Postări blog", value: "\(memberPostsCount)")
+                                label: "Postări blog", value: "\(memberPosts.count)")
                         StatRow(icon: "creditcard.fill", color: .purple,
                                 label: "Cheltuieli plătite", value: "\(memberExpensesCount)")
                     }
@@ -625,6 +626,31 @@ struct MemberDetailSheet: View {
                         Text("Puncte de interes plasate (\(memberPOIs.count))")
                     }
                 }
+
+                // Postările, ca și statisticile de mai sus, sunt scopate la grupul ACTIV.
+                if isInActiveGroup, !memberPosts.isEmpty {
+                    Section {
+                        ForEach(memberPosts) { post in
+                            Button {
+                                selectedPost = post
+                            } label: {
+                                HStack(spacing: 10) {
+                                    Image(systemName: "doc.text.fill")
+                                        .foregroundStyle(.blue)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(post.title)
+                                            .foregroundStyle(.primary)
+                                        Text(post.date, style: .relative)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                    } header: {
+                        Text("Postări blog (\(memberPosts.count))")
+                    }
+                }
             }
             .navigationTitle("")
             .toolbar {
@@ -635,6 +661,16 @@ struct MemberDetailSheet: View {
         }
         .sheet(item: $selectedPOI) { poi in
             POIDetailSheet(poi: poi)
+        }
+        .sheet(item: $selectedPost) { post in
+            NavigationStack {
+                BlogPostDetailView(post: post)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button("Închide") { selectedPost = nil }
+                        }
+                    }
+            }
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
