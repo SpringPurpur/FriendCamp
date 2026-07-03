@@ -1,6 +1,9 @@
 # Credentials — nu comite niciodată fișierul real
 FriendCamp/Services/SupabaseConfig.swift
 
+# Doc local, nu ține pas cu codul — nu se trackuiește/pushuiește
+android-parity-guide.md
+
 # Xcode
 *.xcuserstate
 xcuserdata/
